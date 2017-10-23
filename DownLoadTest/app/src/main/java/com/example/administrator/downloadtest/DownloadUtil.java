@@ -82,7 +82,6 @@ public class DownloadUtil{
                     Log.e("LBH",">>>下载延时");
                 case DownloadManager.STATUS_RUNNING:
                     Log.e("LBH",">>>正在下载");
-
                     break;
                 case DownloadManager.STATUS_SUCCESSFUL:
                     Log.e("LBH",">>>下载完成");
@@ -94,6 +93,8 @@ public class DownloadUtil{
                 case DownloadManager.STATUS_FAILED:
                     Log.e("LBH",">>>下载失败");
                     break;
+                default:
+                   break;
             }
         }
 
@@ -104,7 +105,7 @@ public class DownloadUtil{
         if (!file.exists())
         {
             try {
-                file.createNewFile();
+               boolean result= file.createNewFile();
                 Log.e("LBH","downloadPath="+file.getPath());
             } catch (IOException e) {
                Log.e("LBH","创建失败");
