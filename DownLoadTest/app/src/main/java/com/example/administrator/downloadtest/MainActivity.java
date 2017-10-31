@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,DownloadUtil.UpdateProgress{
 
     String url = "http://shouji.360tpcdn.com/170906/0a83321c7168d15f4a5971d03cc72c02/com.sigma_rt.totalcontrol_553.apk";
     /**
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        DownloadUtil.listener=this;
     }
 
     private void initView() {
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("url",url);
                 startService(intent);
                 break;
+            default:
+                break;
         }
     }
 
@@ -44,5 +47,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         Log.e("LBH","销毁了");
         DownloadUtil.onDestory();
+    }
+
+    @Override
+    public void getProgress(long progress) {
+        Log.e("LBH","view的progress="+progress);
     }
 }

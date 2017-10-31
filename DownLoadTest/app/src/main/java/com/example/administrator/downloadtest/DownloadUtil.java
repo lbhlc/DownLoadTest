@@ -12,12 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-
 import java.io.File;
 import java.io.IOException;
-
-
-import static android.R.attr.versionName;
 
 /**
  * 作者libohan on 2017/10/23.
@@ -25,6 +21,7 @@ import static android.R.attr.versionName;
  */
 
 public class DownloadUtil{
+    public static UpdateProgress listener;
     private static Handler handler=new Handler()
     {
         @Override
@@ -35,6 +32,7 @@ public class DownloadUtil{
     private static final Runnable runnable=new Runnable() {
         @Override
         public void run() {
+            Log.e("LBH","GOGOGO");
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(mTaskId);//筛选下载任务，传入任务ID，可变参数
             final Cursor c = downloadManager.query(query);
@@ -47,7 +45,15 @@ public class DownloadUtil{
             long downloadedSoFar = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
             int bytes_total = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
             Log.e("LBH","progress="+(downloadedSoFar*100)/bytes_total);
+            long result=(downloadedSoFar*100)/bytes_total;
+            listener.getProgress((downloadedSoFar*100)/bytes_total);
             handler.postDelayed(this,500);
+            if (result==100)
+            {
+                handler.removeCallbacks(this);
+                c.close();
+            }
+
         }
 
     };
@@ -57,6 +63,9 @@ public class DownloadUtil{
             checkDownloadStatus(context);//检查下载状态
         }
     };
+
+
+
     private static DownloadManager downloadManager;
     private static long mTaskId;
     private static String downloadPath;
@@ -111,7 +120,10 @@ public class DownloadUtil{
                Log.e("LBH","创建失败");
             }
         }else
-        if (!file.exists()) return;
+        if (!file.exists())
+        {
+            return;
+        }
         Log.e("LBH","downloadPath="+file.getPath());
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri uri = Uri.parse("file://" + file.toString());
@@ -156,5 +168,9 @@ public class DownloadUtil{
   {
       handler.removeCallbacks(runnable);
       handler=null;
+  }
+  interface UpdateProgress
+  {
+      public void getProgress(long progress);
   }
 }
