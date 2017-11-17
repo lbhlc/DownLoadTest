@@ -11,6 +11,7 @@ import com.example.administrator.downloadtest.testmvp.BaseActivity;
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, DownloadUtil.UpdateProgress {
 
     String url = "http://shouji.360tpcdn.com/170906/0a83321c7168d15f4a5971d03cc72c02/com.sigma_rt.totalcontrol_553.apk";
+
     /**
      * Button
      */
